@@ -2,7 +2,7 @@ import { default as http } from "axios";
 import { memoizedRefreshToken } from "../services/Auth/auth.service";
 
 const axios = http.create({
-  baseURL: "http://103.175.221.10:3000",
+  baseURL: "https://attendance-api.superrexy-dev.my.id/",
   timeout: 3000,
   headers: {
     "Content-Type": "application/json",

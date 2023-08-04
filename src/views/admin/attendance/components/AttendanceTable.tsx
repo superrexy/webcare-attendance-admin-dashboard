@@ -180,7 +180,7 @@ const AttendanceTable = ({
           </a>
           {info.row.original.file_absence && (
             <a
-              href={`http://103.175.221.10:3000/${info.row.original.file_absence}`}
+              href={`https://attendance-api.superrexy-dev.my.id//${info.row.original.file_absence}`}
               target="_blank"
               className={`ml-2 min-w-max rounded-[20px] bg-blue-500 px-5 py-2 text-white transition-colors duration-200`}
               rel="noreferrer"
