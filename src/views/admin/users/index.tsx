@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 
 import UserTable from "./components/UserTable";
 import useUsers from "../../../hooks/useUsers";
@@ -14,6 +14,9 @@ import {
 import { toast } from "react-toastify";
 import { User } from "../../../models/login.model";
 import ModalDelete from "../../../components/modal/ModalDelete";
+import { StringParam, useQueryParam } from "use-query-params";
+import { FiSearch } from "react-icons/fi";
+import { debounce } from "lodash";
 
 const Users = () => {
   const { users, fetchUsers } = useUsers();
@@ -23,13 +26,13 @@ const Users = () => {
     selectedUser: null,
   });
 
+  const [name, setName] = useQueryParam("name", StringParam);
+
   const { showModal, setShowModal, toggle } = useModal();
 
-  const {
-    showModal: showModalDelete,
-    setShowModal: setShowModalDelete,
-    toggle: toggleModalDelete,
-  } = useModal();
+  const { showModal: showModalDelete, setShowModal: setShowModalDelete } =
+    useModal();
+
   const {
     register,
     reset,
@@ -88,7 +91,7 @@ const Users = () => {
         },
         success: {
           render({ data }) {
-            fetchUsers();
+            fetchUsers({});
 
             return `User ${data.name} ${
               options.isUpdate ? "updated" : "created"
@@ -129,7 +132,7 @@ const Users = () => {
         toast.success(
           `User ${options.selectedUser?.name} deleted successfully!`
         );
-        fetchUsers();
+        fetchUsers({});
         setShowModalDelete(false);
         setOptions({
           ...options,
@@ -143,17 +146,53 @@ const Users = () => {
     }
   };
 
+  const handleSearch = useRef(
+    debounce(async (name) => {
+      await fetchUsers({ name });
+    }, 1000)
+  ).current;
+
+  React.useEffect(() => {
+    if (name) {
+      handleSearch(name);
+    } else {
+      fetchUsers({});
+    }
+
+    return () => {
+      handleSearch.cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handleSearch, name]);
+
   return (
     <div className="mt-3 h-full">
       <div className="h-fit w-full">
         <div className="mb-4 mt-5 flex flex-col justify-between px-4 md:flex-row md:items-center">
-          <div className="flex items-center">
+          <div className="flex w-full items-center">
             <h4 className="ml-1 text-2xl font-bold text-navy-700 dark:text-white">
               Users
             </h4>
             <div className="mx-3 h-full w-0.5 bg-gray-300">&nbsp;</div>
             <p>{`${users.length} User`}</p>
+
+            <div className="ml-5">
+              <div className="flex h-12 w-full items-center overflow-hidden rounded-full border-2 border-gray-300 bg-gray-100 text-navy-700 dark:bg-navy-900 dark:text-white">
+                <input
+                  name="search"
+                  className="w-96 rounded-xl p-3 text-sm outline-none"
+                  placeholder="Search by name, email, username"
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                />
+                <p className="pl-3 pr-4 text-xl">
+                  <FiSearch className="h-4 w-4 text-gray-400 dark:text-white" />
+                </p>
+              </div>
+            </div>
           </div>
+
           <button
             onClick={() => {
               setOptions({
@@ -164,7 +203,7 @@ const Users = () => {
               reset();
               toggle();
             }}
-            className="rounded-[20px] bg-brand-500 px-5 py-2 text-white transition-colors duration-200 hover:bg-brand-600"
+            className="min-w-max rounded-[20px] bg-brand-500 px-5 py-2 text-white transition-colors duration-200 hover:bg-brand-600"
           >
             + Create User
           </button>

@@ -1,4 +1,5 @@
 // Custom components
+import { ErrorMessage } from "@hookform/error-message";
 import React from "react";
 import {
   FieldErrors,
@@ -13,9 +14,9 @@ interface InputFieldProps<T> extends React.ComponentPropsWithoutRef<"input"> {
   state?: string;
   label?: string;
   name: Path<T>;
-  register: UseFormRegister<T>;
+  register?: UseFormRegister<T>;
   validation?: RegisterOptions;
-  errors: FieldErrors<T>;
+  errors?: FieldErrors<T>;
 }
 
 function InputField<T>({
@@ -55,23 +56,18 @@ function InputField<T>({
         type={type}
         id={id}
         placeholder={placeholder}
-        className={`mt-2 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-3 text-sm outline-none ${
-          disabled === true
-            ? "!border-none !bg-gray-100 dark:!bg-white/5 dark:placeholder:!text-[rgba(255,255,255,0.15)]"
-            : state === "error"
-            ? "border-red-500 text-red-500 placeholder:text-red-500 dark:!border-red-400 dark:!text-red-400 dark:placeholder:!text-red-400"
-            : state === "success"
-            ? "border-green-500 text-green-500 placeholder:text-green-500 dark:!border-green-400 dark:!text-green-400 dark:placeholder:!text-green-400"
-            : "border-gray-200 dark:!border-white/10 dark:text-white"
-        }`}
+        className={`mt-2 flex h-12 w-full items-center justify-center rounded-xl border border-gray-200 bg-white/0 p-3 text-sm outline-none dark:!border-white/10
+        dark:text-white`}
         {...register(name, validation)}
         {...rest}
       />
-      {errors.root && (
-        <p className="absolute mt-1 text-xs text-red-500">
-          {errors.root.message.toString()}
-        </p>
-      )}
+      <ErrorMessage
+        errors={errors}
+        name={name as any}
+        render={({ message }) => (
+          <p className="absolute mt-1 text-xs text-red-500">{message}</p>
+        )}
+      />
     </div>
   );
 }

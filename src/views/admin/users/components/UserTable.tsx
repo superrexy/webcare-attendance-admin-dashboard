@@ -76,6 +76,28 @@ const UserTable = ({
         </p>
       ),
     }),
+    columnHelper.accessor("role", {
+      id: "Role",
+      header: () => (
+        <p className="text-sm font-bold text-gray-600 dark:text-white">Role</p>
+      ),
+      cell: (info) => {
+        switch (info.getValue()) {
+          case "admin":
+            return (
+              <div className="w-fit rounded-lg bg-brand-500 px-3 py-2 text-xs font-bold uppercase text-white transition duration-200 dark:bg-brand-400">
+                ADMIN
+              </div>
+            );
+          default:
+            return (
+              <div className="w-fit rounded-lg bg-green-500 px-3 py-2 text-xs font-bold uppercase text-white transition duration-200 dark:bg-green-400">
+                KARYAWAN
+              </div>
+            );
+        }
+      },
+    }),
     columnHelper.accessor("action", {
       id: "Action",
       header: () => (

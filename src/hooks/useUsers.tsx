@@ -5,9 +5,18 @@ import { User } from "../models/login.model";
 const useUsers = () => {
   const [users, setUsers] = React.useState<User[]>([]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async ({
+    role = null,
+    name = null,
+  }: {
+    role?: "admin" | "user";
+    name?: string;
+  }) => {
     try {
-      const result = await getUsers({ role: "user" });
+      const result = await getUsers({
+        name,
+        role,
+      });
       setUsers(result);
     } catch (error) {
       console.error(error);
@@ -18,7 +27,7 @@ const useUsers = () => {
     { label: string; value: string }[]
   > => {
     return new Promise(async (resolve) => {
-      const users = await getUsers({ role: "user" });
+      const users = await getUsers({});
 
       const map = users.map((item) => ({
         label: item.name,
@@ -30,7 +39,7 @@ const useUsers = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchUsers({});
   }, []);
 
   return { users, fetchUsers, fetchUsersPromise };

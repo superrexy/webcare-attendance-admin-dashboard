@@ -48,7 +48,7 @@ const AttendanceTable = ({
               className="mr-5 h-10 w-10 rounded-full object-cover"
               alt={info.getValue()}
             />
-            <p className="text-sm font-bold text-navy-700 dark:text-white">
+            <p className="line-clamp-1 w-fit truncate text-sm font-bold text-navy-700 dark:text-white">
               {info.getValue()}
             </p>
           </div>
@@ -180,7 +180,7 @@ const AttendanceTable = ({
           </a>
           {info.row.original.file_absence && (
             <a
-              href={`https://attendance-api.superrexy-dev.my.id//${info.row.original.file_absence}`}
+              href={`${process.env.REACT_APP_API_BASE_URL}${info.row.original.file_absence}`}
               target="_blank"
               className={`ml-2 min-w-max rounded-[20px] bg-blue-500 px-5 py-2 text-white transition-colors duration-200`}
               rel="noreferrer"

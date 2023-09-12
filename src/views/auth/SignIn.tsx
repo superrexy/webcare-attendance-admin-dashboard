@@ -69,7 +69,7 @@ export default function SignIn() {
         {/* Email */}
         <InputField
           variant="auth"
-          extra="mb-3"
+          extra="mb-5"
           label="Username or Email"
           placeholder="Enter your username"
           id="username"
@@ -85,7 +85,7 @@ export default function SignIn() {
         {/* Password */}
         <InputField
           variant="auth"
-          extra="mb-3"
+          extra="mb-5"
           label="Password"
           placeholder="Min. 8 characters"
           id="password"

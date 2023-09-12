@@ -7,14 +7,17 @@ import { formatToFormData } from "../../utils/formatToFormData";
 
 export const getUsers = async ({
   role = null,
+  name = null,
 }: {
   role?: "admin" | "user";
+  name?: string;
 }) => {
   const response: AxiosResponse<ResponseAPI<User[]>, any> = await axios.get(
     "/api/v1/users",
     {
       params: {
         role,
+        name,
       },
     }
   );

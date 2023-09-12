@@ -15,7 +15,7 @@ export const refreshTokenService = async () => {
   const auth = JSON.parse(localStorage.getItem("auth") || "{}");
   try {
     const response = await http.get(
-      "https://attendance-api.superrexy-dev.my.id//api/v1/authentication/refresh-token",
+      `${process.env.REACT_APP_API_BASE_URL}api/v1/authentication/refresh-token`,
       {
         headers: {
           Authorization: `Bearer ${auth.refresh_token}`,
