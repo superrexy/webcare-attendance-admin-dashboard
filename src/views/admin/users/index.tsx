@@ -4,7 +4,7 @@ import UserTable from "./components/UserTable";
 import useUsers from "../../../hooks/useUsers";
 import Modal from "../../../components/modal/Modal";
 import useModal from "../../../hooks/useModal";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import InputField from "../../../components/fields/InputField";
 import {
   createUser,
@@ -17,6 +17,7 @@ import ModalDelete from "../../../components/modal/ModalDelete";
 import { StringParam, useQueryParam } from "use-query-params";
 import { FiSearch } from "react-icons/fi";
 import { debounce } from "lodash";
+import SelectField from "../../../components/fields/SelectField";
 
 const Users = () => {
   const { users, fetchUsers } = useUsers();
@@ -39,9 +40,12 @@ const Users = () => {
     formState: { errors },
     handleSubmit,
     setValue,
+    control,
   } = useForm();
 
   const handleUserForm = async (data: any) => {
+    data.role = data.role.value;
+
     try {
       const response: Promise<User> = new Promise(async (resolve, reject) => {
         if (options.isUpdate) {
@@ -123,6 +127,10 @@ const Users = () => {
     setValue("name", user?.name);
     setValue("email", user?.email);
     setValue("username", user?.username);
+    setValue("role", {
+      label: user?.role === "admin" ? "Admin" : "Karyawan",
+      value: user?.role,
+    });
   };
 
   const handleDelete = async () => {
@@ -144,6 +152,23 @@ const Users = () => {
       toast.error(error.toString());
       console.error(error);
     }
+  };
+
+  const fetchRolePromise = async (): Promise<
+    { label: string; value: string }[]
+  > => {
+    return new Promise(async (resolve) => {
+      resolve([
+        {
+          label: "Admin",
+          value: "admin",
+        },
+        {
+          label: "Karyawan",
+          value: "user",
+        },
+      ]);
+    });
   };
 
   const handleSearch = useRef(
@@ -227,16 +252,36 @@ const Users = () => {
         setIsOpen={setShowModal}
       >
         <form onSubmit={handleSubmit(handleUserForm)}>
-          <InputField
-            errors={errors}
-            register={register}
-            validation={{
-              required: "This field is required",
-            }}
-            name="name"
-            label="Name"
-            extra="mb-5"
-          />
+          <div className="grid grid-cols-2 gap-3">
+            <InputField
+              errors={errors}
+              register={register}
+              validation={{
+                required: "This field is required",
+              }}
+              name="name"
+              label="Name"
+              extra="mb-5"
+            />
+            <Controller
+              name="role"
+              control={control}
+              rules={{
+                required: "User is required",
+              }}
+              render={({ field, formState: { errors } }) => (
+                <SelectField
+                  name="role"
+                  label="Role"
+                  className="mb-2"
+                  loadOptions={fetchRolePromise}
+                  field={field}
+                  errors={errors}
+                  validation={{ required: "User is required" }}
+                />
+              )}
+            />
+          </div>
           <div className="mb-5 grid grid-cols-2 gap-3">
             <div className="col-span-1">
               <InputField
