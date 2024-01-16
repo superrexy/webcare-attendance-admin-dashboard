@@ -138,14 +138,14 @@ const Attendance = () => {
               Attendance
             </h4>
             <div className="flex items-center gap-5">
-              <button
+              {/* <button
                 onClick={() => {
                   setShowAttendanceOptionModal(true);
                 }}
                 className="inline-flex items-center gap-3 rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
               >
                 <IoFilter className="h-4 w-4" /> Filter
-              </button>
+              </button> */}
               <button
                 onClick={() => {
                   setShowAttendanceOptionModal(true);
